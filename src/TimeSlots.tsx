@@ -10,7 +10,7 @@ interface Slot {
 
 const RoomDisplay: React.FC = () => {
   const [slots, setSlots] = useState<Slot[]>([]);
-  const apiUrl = 'https://your-api-gateway-url/Prod/getSlots'; // Replace with your API Gateway URL
+  const apiUrl = 'https://q35r557835.execute-api.eu-west-2.amazonaws.com/Prod'; // Replace with your API Gateway URL
 
   useEffect(() => {
     fetch(apiUrl)
