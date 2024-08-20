@@ -1,19 +1,19 @@
-// src/BookingPage.tsx
-
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const BookingPage: React.FC = () => {
+  const { roomName } = useParams<{ roomName: string }>();
   const [slots, setSlots] = useState<number[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState('');
-  const apiUrl = 'https://your-api-gateway-url/Prod/bookSlot'; // Replace with your API Gateway URL
+  const apiUrl = `https://your-api-gateway-url/Prod/bookSlot?roomName=${roomName}`; // Adjust the API URL
 
   useEffect(() => {
-    fetch('https://your-api-gateway-url/Prod/getAvailableSlots') // Fetch available slots
+    fetch(`https://your-api-gateway-url/Prod/getAvailableSlots?roomName=${roomName}`) // Fetch available slots
       .then((response) => response.json())
       .then((data) => setSlots(data))
       .catch((error) => console.error('Error fetching available slots:', error));
-  }, []);
+  }, [roomName]);
 
   const handleBooking = () => {
     if (selectedSlot !== null) {
@@ -38,7 +38,7 @@ const BookingPage: React.FC = () => {
 
   return (
     <div>
-      <h1>Book Room</h1>
+      <h1>Book {roomName}</h1> {/* Display Room Name */}
       <label htmlFor="slots">Select a time slot:</label>
       <select
         id="slots"
