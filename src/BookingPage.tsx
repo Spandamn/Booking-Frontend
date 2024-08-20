@@ -1,59 +1,66 @@
-import React, { useState } from 'react';
+// src/BookingPage.tsx
 
-interface BookingPageProps {
-  roomName: string;
-  availableSlots: string[];
-}
+import React, { useState, useEffect } from 'react';
 
-const BookingPage: React.FC<BookingPageProps> = ({ roomName, availableSlots }) => {
-  const [selectedSlot, setSelectedSlot] = useState('');
+const BookingPage: React.FC = () => {
+  const [slots, setSlots] = useState<number[]>([]);
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState('');
+  const apiUrl = 'https://your-api-gateway-url/Prod/bookSlot'; // Replace with your API Gateway URL
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (selectedSlot && email) {
-      alert(`Room ${roomName} booked for ${selectedSlot} by ${email}`);
-      // Here, you'd normally handle the form submission, e.g., send data to a server
-    } else {
-      alert('Please select a time slot and enter your email.');
+  useEffect(() => {
+    fetch('https://your-api-gateway-url/Prod/getAvailableSlots') // Fetch available slots
+      .then((response) => response.json())
+      .then((data) => setSlots(data))
+      .catch((error) => console.error('Error fetching available slots:', error));
+  }, []);
+
+  const handleBooking = () => {
+    if (selectedSlot !== null) {
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          Slot: selectedSlot,
+          Email: email,
+          Date: new Date().toISOString().split('T')[0], // Example date format
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('Booking successful:', data);
+        })
+        .catch((error) => console.error('Error booking slot:', error));
     }
   };
 
   return (
-    <div className="container">
-      <h1>{roomName}</h1>
-      <form onSubmit={handleSubmit} className="booking-form">
-        <div className="form-group">
-          <label htmlFor="slot">Select a Time Slot:</label>
-          <select
-            id="slot"
-            value={selectedSlot}
-            onChange={(e) => setSelectedSlot(e.target.value)}
-            className="form-control"
-          >
-            <option value="">--Select a time slot--</option>
-            {availableSlots.map((slot, index) => (
-              <option key={index} value={slot}>
-                {slot}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="email">Enter Your Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="form-control"
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Book Room
-        </button>
-      </form>
+    <div>
+      <h1>Book Room</h1>
+      <label htmlFor="slots">Select a time slot:</label>
+      <select
+        id="slots"
+        value={selectedSlot || ''}
+        onChange={(e) => setSelectedSlot(Number(e.target.value))}
+      >
+        <option value="" disabled>
+          Select a slot
+        </option>
+        {slots.map((slot) => (
+          <option key={slot} value={slot}>
+            {`${slot}:00 - ${slot + 1}:00`}
+          </option>
+        ))}
+      </select>
+      <input
+        type="email"
+        placeholder="Enter your email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <button onClick={handleBooking}>Book Slot</button>
     </div>
   );
 };
