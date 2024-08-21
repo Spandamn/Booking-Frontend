@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './BookingPage.css'; // Add relevant styles
+import './BookingPage.css';
 
 interface Slot {
   Slot: number;
@@ -15,16 +15,15 @@ const BookingPage: React.FC = () => {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState<string>('');
 
-  const apiUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}&date=${selectedDate}`;
-
-  useEffect(() => {
+  const handleFetchSlots = () => {
     if (selectedDate) {
+      const apiUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}&date=${selectedDate}`;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => setAvailableSlots(data))
         .catch((error) => console.error('Error fetching available slots:', error));
     }
-  }, [selectedDate]);
+  };
 
   const handleSlotClick = (slot: number) => {
     setSelectedSlot(slot);
@@ -59,7 +58,6 @@ const BookingPage: React.FC = () => {
   return (
     <div className="booking-page">
       <h1>Book a Slot in {roomName}</h1>
-      
       <div className="date-picker">
         <label>Select a Date:</label>
         <input
@@ -67,9 +65,9 @@ const BookingPage: React.FC = () => {
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
         />
+        <button onClick={handleFetchSlots}>Fetch Available Slots</button>
       </div>
-      
-      {selectedDate && (
+      {selectedDate && availableSlots.length > 0 && (
         <div className="slots-container">
           <h2>Available Slots on {selectedDate}</h2>
           <div className="slots">
@@ -85,7 +83,6 @@ const BookingPage: React.FC = () => {
           </div>
         </div>
       )}
-      
       <div className="email-input">
         <label>Enter your Email:</label>
         <input
@@ -94,7 +91,6 @@ const BookingPage: React.FC = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-      
       <button onClick={handleBookingSubmit} className="submit-button">Book Slot</button>
     </div>
   );
