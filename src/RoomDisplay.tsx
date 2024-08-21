@@ -15,7 +15,7 @@ const RoomDisplay: React.FC = () => {
   const apiUrl = `https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/getSlots?roomName=${roomName}`; // Adjust the API URL
 
   useEffect(() => {
-    fetch(apiUrl)
+    fetch(apiUrl, { mode: 'cors' })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
