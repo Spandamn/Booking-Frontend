@@ -6,10 +6,10 @@ const BookingPage: React.FC = () => {
   const [slots, setSlots] = useState<number[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState('');
-  const apiUrl = `https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/bookSlot?roomName=${roomName}`; // Adjust the API URL
+  const apiUrl = `https://8cz9k1w6jb.execute-api.eu-west-2.amazonaws.com/Prod/bookSlot?roomName=${roomName}`; // Adjust the API URL
 
   useEffect(() => {
-    fetch(`https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}`) // Fetch available slots
+    fetch(`https://8cz9k1w6jb.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}`) // Fetch available slots
       .then((response) => response.json())
       .then((data) => setSlots(data))
       .catch((error) => console.error('Error fetching available slots:', error));
