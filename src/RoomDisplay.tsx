@@ -10,27 +10,25 @@ interface Slot {
 
 const RoomDisplay: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
-  console.log(roomName);
   const [slots, setSlots] = useState<Slot[]>([]);
-  const apiUrl = `https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/getSlots?roomName=${roomName}`; // Adjust the API URL
+  const apiUrl = `https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/getSlots?roomName=${roomName}`;
 
   useEffect(() => {
-    fetch(apiUrl, { mode: 'cors' })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setSlots(data);
-      })
-      .catch((error) => console.error('Error fetching slots:', error.message));
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', apiUrl);
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        setSlots(JSON.parse(xhr.responseText));
+      } else if (xhr.readyState === 4) {
+        console.error('Error fetching slots:', xhr.statusText);
+      }
+    };
+    xhr.send();
   }, [roomName]);
 
   return (
     <div>
-      <h1>{roomName} Availability</h1> {/* Display Room Name */}
+      <h1>{roomName} Availability</h1>
       <div className="slots">
         {slots.map((slot, index) => (
           <div
