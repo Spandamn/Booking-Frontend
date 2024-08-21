@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import config from './config.json';
 import './BookingPage.css';
 
 interface Slot {
@@ -17,7 +18,7 @@ const BookingPage: React.FC = () => {
 
   const handleFetchSlots = () => {
     if (selectedDate) {
-      const apiUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}&date=${selectedDate}`;
+      const apiUrl = `${config.apiBaseUrl}/getAvailableSlots?roomName=${roomName}&date=${selectedDate}`;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => setAvailableSlots(data))
@@ -41,7 +42,8 @@ const BookingPage: React.FC = () => {
       Date: selectedDate,
     };
 
-    fetch(`https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/bookSlot?roomName=${roomName}`, {
+    const apiUrl = `${config.apiBaseUrl}/bookSlot?roomName=${roomName}`;
+    fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
