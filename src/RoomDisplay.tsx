@@ -12,7 +12,7 @@ interface Slot {
 const RoomDisplay: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [slots, setSlots] = useState<Slot[]>([]);
-  const apiUrl = `https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/getSlots?roomName=${roomName}`;
+  const apiUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/getSlots?roomName=${roomName}`;
   const bookingUrl = `/booking/${roomName}/book`; // Link to your booking page
 
   useEffect(() => {

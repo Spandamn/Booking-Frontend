@@ -13,8 +13,8 @@ const BookingPage: React.FC = () => {
   const [availableSlots, setAvailableSlots] = useState<number[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState<string>('');
-  const apiUrl = `https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}`;
-  const bookSlotUrl = `https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/bookSlot?roomName=${roomName}`;
+  const apiUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}`;
+  const bookSlotUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/bookSlot?roomName=${roomName}`;
 
   useEffect(() => {
     fetch(apiUrl, { mode: 'cors' })
