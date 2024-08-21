@@ -6,7 +6,7 @@ const BookingPage: React.FC = () => {
   const [slots, setSlots] = useState<number[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState('');
-  const apiUrl = `https://your-api-gateway-url/Prod/bookSlot?roomName=${roomName}`; // Adjust the API URL
+  const apiUrl = `https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/bookSlot?roomName=${roomName}`; // Adjust the API URL
 
   useEffect(() => {
     fetch(`https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}`) // Fetch available slots
