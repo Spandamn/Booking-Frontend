@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import RoomDisplay from './TimeSlots';
+import RoomDisplay from './RoomDisplay';
 import BookingPage from './BookingPage';
 
 const App: React.FC = () => {
