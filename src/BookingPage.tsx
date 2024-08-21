@@ -9,7 +9,7 @@ const BookingPage: React.FC = () => {
   const apiUrl = `https://your-api-gateway-url/Prod/bookSlot?roomName=${roomName}`; // Adjust the API URL
 
   useEffect(() => {
-    fetch(`https://your-api-gateway-url/Prod/getAvailableSlots?roomName=${roomName}`) // Fetch available slots
+    fetch(`https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}`) // Fetch available slots
       .then((response) => response.json())
       .then((data) => setSlots(data))
       .catch((error) => console.error('Error fetching available slots:', error));

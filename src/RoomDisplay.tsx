@@ -10,16 +10,22 @@ interface Slot {
 
 const RoomDisplay: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
+  console.log(roomName);
   const [slots, setSlots] = useState<Slot[]>([]);
-  const apiUrl = `https://8k14rd0005.execute-api.eu-west-2.amazonaws.com/Prod/getSlots?roomName=${roomName}`; // Adjust the API URL
+  const apiUrl = `https://6hpzr0hu27.execute-api.eu-west-2.amazonaws.com/Prod/getSlots?roomName=${roomName}`; // Adjust the API URL
 
   useEffect(() => {
     fetch(apiUrl)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
         setSlots(data);
       })
-      .catch((error) => console.error('Error fetching slots:', error));
+      .catch((error) => console.error('Error fetching slots:', error.message));
   }, [roomName]);
 
   return (
