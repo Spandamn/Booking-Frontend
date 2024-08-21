@@ -1,44 +1,103 @@
-.booking-page {
-  margin: 20px;
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import './BookingPage.css'; // Add relevant styles
+
+interface Slot {
+  Slot: number;
+  Email?: string;
+  Date: string;
 }
 
-.date-picker {
-  margin-bottom: 20px;
-}
+const BookingPage: React.FC = () => {
+  const { roomName } = useParams<{ roomName: string }>();
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [availableSlots, setAvailableSlots] = useState<Slot[]>([]);
+  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
+  const [email, setEmail] = useState<string>('');
 
-.slots-container {
-  margin-bottom: 20px;
-}
+  const apiUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}&date=${selectedDate}`;
 
-.slots {
-  display: flex;
-  flex-wrap: wrap;
-}
+  useEffect(() => {
+    if (selectedDate) {
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => setAvailableSlots(data))
+        .catch((error) => console.error('Error fetching available slots:', error));
+    }
+  }, [selectedDate]);
 
-.slot {
-  margin: 5px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  background-color: #f0f0f0;
-}
+  const handleSlotClick = (slot: number) => {
+    setSelectedSlot(slot);
+  };
 
-.slot.selected {
-  background-color: orange;
-}
+  const handleBookingSubmit = () => {
+    if (!selectedSlot || !email) {
+      alert('Please select a slot and enter your email.');
+      return;
+    }
 
-.email-input {
-  margin-bottom: 20px;
-}
+    const bookingData = {
+      Slot: selectedSlot,
+      Email: email,
+      Date: selectedDate,
+    };
 
-.submit-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+    fetch(`https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/bookSlot?roomName=${roomName}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bookingData),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        alert('Booking successful!');
+      })
+      .catch((error) => console.error('Error booking slot:', error));
+  };
 
-.submit-button:hover {
-  background-color: #0056b3;
-}
+  return (
+    <div className="booking-page">
+      <h1>Book a Slot in {roomName}</h1>
+      
+      <div className="date-picker">
+        <label>Select a Date:</label>
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+        />
+      </div>
+      
+      {selectedDate && (
+        <div className="slots-container">
+          <h2>Available Slots on {selectedDate}</h2>
+          <div className="slots">
+            {availableSlots.map((slot) => (
+              <div
+                key={slot.Slot}
+                className={`slot ${selectedSlot === slot.Slot ? 'selected' : ''}`}
+                onClick={() => handleSlotClick(slot.Slot)}
+              >
+                {`${slot.Slot}:00 - ${slot.Slot + 1}:00`}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      <div className="email-input">
+        <label>Enter your Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+      
+      <button onClick={handleBookingSubmit} className="submit-button">Book Slot</button>
+    </div>
+  );
+};
+
+export default BookingPage;
