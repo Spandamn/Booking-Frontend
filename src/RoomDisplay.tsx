@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import QRCode from 'qrcode.react';
-import config from './config.json';
+import QRCode from 'qrcode.react';  // Import QR code generator
+import config from './config.json';  // Assuming your API URLs are in this config file
 import './RoomDisplay.css';
 
 interface Slot {
@@ -13,8 +13,7 @@ interface Slot {
 const RoomDisplay: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [slots, setSlots] = useState<Slot[]>([]);
-  const todayDate = new Date().toISOString().split('T')[0];
-  const apiUrl = `${config.apiBaseUrl}/getSlots?roomName=${roomName}&date=${todayDate}`;
+  const apiUrl = `${config.apiBaseUrl}/getSlots?roomName=${roomName}`;
 
   useEffect(() => {
     fetch(apiUrl)
@@ -28,28 +27,29 @@ const RoomDisplay: React.FC = () => {
       .catch((error) => console.error('Error fetching slots:', error.message));
   }, [roomName]);
 
-  const allSlots = Array.from({ length: 24 }, (_, i) => i + 8); // 8:00 - 23:00
+  // Define slots from 8:00 to 23:00
+  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8);
 
-  const bookingUrl = `${config.apiBaseUrl}/${roomName}/book`;
+  // Dynamically grab the frontend URL from the browser's address bar
+  const bookingUrl = `${window.location.origin}/${roomName}/book`;
 
   return (
     <div className="room-display-container">
       <h1>{roomName} Availability</h1>
-      <div className="legend">
-        <div><span className="legend-box available"></span>Available</div>
-        <div><span className="legend-box booked"></span>Booked</div>
+      <div className="slots">
+        {allSlots.map((slot, index) => (
+          <div
+            key={index}
+            className={`slot ${slots.some(s => s.Slot === slot) ? 'booked' : 'available'}`}
+          >
+            {`${slot}:00 - ${slot + 1}:00`}
+          </div>
+        ))}
       </div>
-      <table className="slots-table">
-        <tbody>
-          {allSlots.map((slot, index) => (
-            <tr key={index}>
-              <td className={slots.some(s => s.Slot === slot) ? 'booked' : 'available'}>
-                {`${slot}:00 - ${slot + 1}:00`}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="legend">
+        <div><span className="legend-color available"></span> Available</div>
+        <div><span className="legend-color booked"></span> Booked</div>
+      </div>
       <div className="qr-code">
         <h2>Book a Slot</h2>
         <QRCode value={bookingUrl} />
