@@ -1,6 +1,6 @@
-// src/TimeSlots.tsx
-
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import './RoomDisplay.css';  // Import the CSS file
 
 interface Slot {
   Slot: number;
@@ -9,21 +9,37 @@ interface Slot {
 }
 
 const RoomDisplay: React.FC = () => {
+  const { roomName } = useParams<{ roomName: string }>();
   const [slots, setSlots] = useState<Slot[]>([]);
-  const apiUrl = 'https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod'; // Replace with your API Gateway URL
+  const apiUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/getSlots?roomName=${roomName}`;
 
   useEffect(() => {
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
         setSlots(data);
-      })
-      .catch((error) => console.error('Error fetching slots:', error));
-  }, []);
+      } catch (error) {
+        console.error('Error fetching slots:', error);
+      }
+    };
+
+    fetchData();
+  }, [roomName]);
 
   return (
     <div>
-      <h1>Room 1 Availability</h1> {/* Change Room 1 as needed */}
+      <h1>{roomName} Availability</h1>
       <div className="slots">
         {slots.map((slot, index) => (
           <div
