@@ -1,91 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import './BookingPage.css';  // Create and import a CSS file for styling
-
-interface Slot {
-  Slot: number;
-  Email: string;
-  Date: string;
+.booking-page {
+  margin: 20px;
 }
 
-const BookingPage: React.FC = () => {
-  const { roomName } = useParams<{ roomName: string }>();
-  const [availableSlots, setAvailableSlots] = useState<number[]>([]);
-  const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
-  const [email, setEmail] = useState<string>('');
-  const apiUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/getAvailableSlots?roomName=${roomName}`;
-  const bookSlotUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/bookSlot?roomName=${roomName}`;
+.date-picker {
+  margin-bottom: 20px;
+}
 
-  useEffect(() => {
-    fetch(apiUrl, { mode: 'cors' })
-      .then((response) => response.json())
-      .then((data) => setAvailableSlots(data))
-      .catch((error) => console.error('Error fetching available slots:', error));
-  }, [roomName]);
+.slots-container {
+  margin-bottom: 20px;
+}
 
-  const handleBooking = () => {
-    if (!selectedSlot || !email) {
-      alert('Please select a slot and enter your email.');
-      return;
-    }
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+}
 
-    const bookingData = {
-      Slot: selectedSlot,
-      Email: email,
-      Date: new Date().toISOString().split('T')[0], // Today's date
-    };
+.slot {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: #f0f0f0;
+}
 
-    fetch(bookSlotUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(bookingData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to book slot.');
-        }
-        return response.json();
-      })
-      .then(() => {
-        alert('Slot booked successfully!');
-        setSelectedSlot(null);
-        setEmail('');
-      })
-      .catch((error) => console.error('Error booking slot:', error));
-  };
+.slot.selected {
+  background-color: orange;
+}
 
-  return (
-    <div className="booking-page-container">
-      <h1>Book a Slot in {roomName}</h1>
-      <div className="booking-form">
-        <label htmlFor="slot">Select a time slot:</label>
-        <select
-          id="slot"
-          value={selectedSlot || ''}
-          onChange={(e) => setSelectedSlot(Number(e.target.value))}
-        >
-          <option value="" disabled>Select a slot</option>
-          {availableSlots.map((slot) => (
-            <option key={slot} value={slot}>
-              {`${slot}:00 - ${slot + 1}:00`}
-            </option>
-          ))}
-        </select>
+.email-input {
+  margin-bottom: 20px;
+}
 
-        <label htmlFor="email">Enter your email:</label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+.submit-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
 
-        <button onClick={handleBooking}>Book Slot</button>
-      </div>
-    </div>
-  );
-};
-
-export default BookingPage;
+.submit-button:hover {
+  background-color: #0056b3;
+}
