@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import QRCode from 'qrcode.react';  // Import QR code generator
+import QRCode from 'qrcode.react';
 import './RoomDisplay.css';
 
 interface Slot {
@@ -12,7 +12,8 @@ interface Slot {
 const RoomDisplay: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [slots, setSlots] = useState<Slot[]>([]);
-  const today = new Date().toISOString().split('T')[0]; // Get today's date
+
+  const today = new Date().toISOString().split('T')[0];  // Get today's date in YYYY-MM-DD format
   const apiUrl = `https://08pob7kjhg.execute-api.eu-west-2.amazonaws.com/Prod/getSlots?roomName=${roomName}&date=${today}`;
 
   useEffect(() => {
@@ -25,14 +26,14 @@ const RoomDisplay: React.FC = () => {
       })
       .then((data) => setSlots(data))
       .catch((error) => console.error('Error fetching slots:', error.message));
-  }, [roomName]);
+  }, [roomName, today]);
 
-  const allSlots = Array.from({ length: 24 }, (_, i) => i + 8); // 8:00 - 23:00
+  const allSlots = Array.from({ length: 24 }, (_, i) => i + 1);  // Slots from 1 to 24 representing hours
 
-  const bookingUrl = `https://yourdomain.com/${roomName}/book`; // Replace with your actual booking URL
+  const bookingUrl = `https://yourdomain.com/${roomName}/book`;
 
   return (
-    <div>
+    <div className="room-display-container">
       <h1>{roomName} Availability</h1>
       <div className="slots">
         {allSlots.map((slot, index) => (

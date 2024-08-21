@@ -1,74 +1,105 @@
 /* General page styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* Container for the room display */
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container for the room display */
+.room-display-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Room name/title */
+.room-display-container h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 2em;
+}
+
+/* Legend container */
+.legend {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+/* Legend box styling */
+.legend-box {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-right: 10px;
+  border-radius: 3px;
+}
+
+/* Legend labels */
+.legend div {
+  margin-right: 20px;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+}
+
+.booked {
+  background-color: #f44336; /* Red */
+}
+
+.available {
+  background-color: #4caf50; /* Green */
+}
+
+/* Slots table styling */
+.slots-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.slots-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* QR Code container */
+.qr-code {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.qr-code h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
   .room-display-container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Room name/title */
-  .room-display-container h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 2em;
-  }
-  
-  /* Slots container */
-  .slots {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 10px;
-  }
-  
-  /* Slot box styling */
-  .slot {
+    margin: 20px auto;
     padding: 10px;
-    text-align: center;
-    border-radius: 5px;
-    font-weight: bold;
-    color: #fff;
-    cursor: pointer;
   }
-  
-  /* Available slot */
-  .slot.available {
-    background-color: #4caf50; /* Green */
+
+  .room-display-container h1 {
+    font-size: 1.5em;
   }
-  
-  /* Booked slot */
-  .slot.booked {
-    background-color: #f44336; /* Red */
+
+  .slots-table td {
+    font-size: 0.9em;
+    padding: 8px;
   }
-  
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    .room-display-container {
-      margin: 20px auto;
-      padding: 10px;
-    }
-  
-    .room-display-container h1 {
-      font-size: 1.5em;
-    }
-  
-    .slots {
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    }
-  
-    .slot {
-      font-size: 0.9em;
-      padding: 8px;
-    }
+
+  .legend div {
+    font-size: 0.9em;
   }
-  
+}
