@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import config from './config.json';
+import config from './config.json'; // Assuming your API URLs are in this config file
 import './BookingPage.css';
 
 interface Slot {
@@ -12,7 +12,7 @@ interface Slot {
 const BookingPage: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const [availableSlots, setAvailableSlots] = useState<Slot[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<number[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState<string>('');
 
@@ -31,7 +31,7 @@ const BookingPage: React.FC = () => {
   };
 
   const handleBookingSubmit = () => {
-    if (!selectedSlot || !email) {
+    if (selectedSlot === null || !email) {
       alert('Please select a slot and enter your email.');
       return;
     }
@@ -57,6 +57,8 @@ const BookingPage: React.FC = () => {
       .catch((error) => console.error('Error booking slot:', error));
   };
 
+  const allSlots = Array.from({ length: 24 }, (_, i) => i + 8); // Assuming slots from 8:00 to 23:00
+
   return (
     <div className="booking-page">
       <h1>Book a Slot in {roomName}</h1>
@@ -73,13 +75,13 @@ const BookingPage: React.FC = () => {
         <div className="slots-container">
           <h2>Available Slots on {selectedDate}</h2>
           <div className="slots">
-            {availableSlots.map((slot) => (
+            {allSlots.map((slot) => (
               <div
-                key={slot.Slot}
-                className={`slot ${selectedSlot === slot.Slot ? 'selected' : ''}`}
-                onClick={() => handleSlotClick(slot.Slot)}
+                key={slot}
+                className={`slot ${availableSlots.includes(slot) ? 'available' : 'booked'} ${selectedSlot === slot ? 'selected' : ''}`}
+                onClick={() => handleSlotClick(slot)}
               >
-                {`${slot.Slot}:00 - ${slot.Slot + 1}:00`}
+                {`${slot}:00 - ${slot + 1}:00`}
               </div>
             ))}
           </div>
