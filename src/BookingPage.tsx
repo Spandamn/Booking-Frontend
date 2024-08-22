@@ -77,7 +77,7 @@ const BookingPage: React.FC = () => {
   return (
     <div className="booking-page container">
       <h1 className="text-center my-4">Book a Slot in {roomName}</h1>
-      <div className="date-picker text-center mb-4">
+      <div className="date-picker form-group text-center mb-4">
         <label htmlFor="date-input" className="mr-3">Select a Date:</label>
         <input
           id="date-input"
@@ -94,20 +94,13 @@ const BookingPage: React.FC = () => {
           Fetch Available Slots
         </button>
       </div>
-
       {showSlots && selectedDate && (
         <div className="slots-container text-center">
           <h2>Available Slots on {selectedDate}</h2>
-          <div className="legend d-flex justify-content-center mb-3">
-            <div className="legend-item d-flex align-items-center mr-4">
-              <div className="legend-box available"></div> Available
-            </div>
-            <div className="legend-item d-flex align-items-center mr-4">
-              <div className="legend-box booked"></div> Booked
-            </div>
-            <div className="legend-item d-flex align-items-center">
-              <div className="legend-box selected"></div> Selected
-            </div>
+          <div className="legend-container text-center mb-3">
+            <span className="legend-item"><div className="legend-box available"></div> Available</span>
+            <span className="legend-item"><div className="legend-box booked"></div> Booked</span>
+            <span className="legend-item"><div className="legend-box selected"></div> Selected</span>
           </div>
           <div className="d-flex justify-content-center">
             <div className="slots d-flex flex-wrap justify-content-center">
@@ -116,7 +109,7 @@ const BookingPage: React.FC = () => {
                 .map((slot) => (
                   <div
                     key={slot}
-                    className={`slot btn ${bookedSlots.includes(slot) ? 'btn-danger' : selectedSlot === slot ? 'btn-warning' : 'btn-success'} m-2 col-5`}
+                    className={`slot btn ${bookedSlots.includes(slot) ? 'btn-danger' : selectedSlot === slot ? 'btn-warning' : 'btn-success'} m-2`}
                     onClick={() => !bookedSlots.includes(slot) && handleSlotClick(slot)}
                     style={{ width: 'auto', padding: '10px 15px', minWidth: '120px' }}
                   >
@@ -127,13 +120,12 @@ const BookingPage: React.FC = () => {
           </div>
         </div>
       )}
-      
       {showSlots && (
-        <div className="email-input text-center mt-4">
+        <div className="email-input form-group text-center mt-4">
           <label htmlFor="email-input">Enter your Email:</label>
           <input
             id="email-input"
-            className="form-control mx-auto mt-2"
+            className="form-control mx-auto"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
