@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './BookingPage.css';
+import './BookingPage.css'; 
 import config from './config.json';
 
 interface Slot {
@@ -13,22 +13,9 @@ const BookingPage: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [availableSlots, setAvailableSlots] = useState<number[]>([]);
+  const [bookedSlots, setBookedSlots] = useState<number[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState<string>('');
-  const [todaySlots, setTodaySlots] = useState<number[]>([]); // Slots available today after the current time
-
-  useEffect(() => {
-    if (selectedDate) {
-      const today = new Date().toISOString().split('T')[0];
-      if (selectedDate === today) {
-        const currentHour = new Date().getHours();
-        const remainingSlots = Array.from({ length: 16 - (currentHour - 8) }, (_, i) => i + (currentHour - 7));
-        setTodaySlots(remainingSlots);
-      } else {
-        setTodaySlots([]);
-      }
-    }
-  }, [selectedDate]);
 
   const handleFetchSlots = () => {
     if (selectedDate) {
@@ -37,12 +24,15 @@ const BookingPage: React.FC = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.length === 0) {
+            // If no slots are returned, assume all are available
             setAvailableSlots(Array.from({ length: 16 }, (_, i) => i + 1));
+            setBookedSlots([]);
           } else {
-            const bookedSlots = data.map((slot: Slot) => slot.Slot);
+            const booked = data.map((slot: Slot) => slot.Slot);
             const allSlots = Array.from({ length: 16 }, (_, i) => i + 1);
-            const freeSlots = allSlots.filter(slot => !bookedSlots.includes(slot));
+            const freeSlots = allSlots.filter(slot => !booked.includes(slot));
             setAvailableSlots(freeSlots);
+            setBookedSlots(booked);
           }
         })
         .catch((error) => console.error('Error fetching available slots:', error));
@@ -50,7 +40,9 @@ const BookingPage: React.FC = () => {
   };
 
   const handleSlotClick = (slot: number) => {
-    if (availableSlots.includes(slot)) {
+    if (selectedSlot === slot) {
+      setSelectedSlot(null); // Deselect if clicked again
+    } else {
       setSelectedSlot(slot);
     }
   };
@@ -77,15 +69,14 @@ const BookingPage: React.FC = () => {
       .then((response) => response.json())
       .then(() => {
         alert('Booking successful!');
+        // Clear the selection
         setSelectedSlot(null);
         setEmail('');
       })
       .catch((error) => console.error('Error booking slot:', error));
   };
 
-  const isSlotAvailable = (slot: number) => {
-    return todaySlots.length === 0 || todaySlots.includes(slot);
-  };
+  const currentHour = new Date().getHours();
 
   return (
     <div className="booking-page">
@@ -95,11 +86,7 @@ const BookingPage: React.FC = () => {
         <input
           type="date"
           value={selectedDate}
-          min={new Date().toISOString().split('T')[0]} // Prevent past dates
-          onChange={(e) => {
-            setSelectedDate(e.target.value);
-            setAvailableSlots([]); // Reset available slots when date changes
-          }}
+          onChange={(e) => setSelectedDate(e.target.value)}
         />
         <button onClick={handleFetchSlots}>Fetch Available Slots</button>
       </div>
@@ -107,17 +94,17 @@ const BookingPage: React.FC = () => {
         <div className="slots-container">
           <h2>Available Slots on {selectedDate}</h2>
           <div className="slots">
-            {Array.from({ length: 16 }, (_, i) => i + 1).map((slot) => (
-              <div
-                key={slot}
-                className={`slot ${
-                  !isSlotAvailable(slot) ? 'booked' : selectedSlot === slot ? 'selected' : availableSlots.includes(slot) ? 'available' : 'booked'
-                }`}
-                onClick={() => handleSlotClick(slot)}
-              >
-                {`${slot + 7}:00 - ${slot + 8}:00`} {/* Display 8:00-9:00 as Slot 1, etc. */}
-              </div>
-            ))}
+            {Array.from({ length: 16 }, (_, i) => i + 1)
+              .filter(slot => selectedDate !== new Date().toISOString().split('T')[0] || slot + 7 >= currentHour)
+              .map((slot) => (
+                <div
+                  key={slot}
+                  className={`slot ${bookedSlots.includes(slot) ? 'booked' : selectedSlot === slot ? 'selected' : 'available'}`}
+                  onClick={() => !bookedSlots.includes(slot) && handleSlotClick(slot)}
+                >
+                  {`${slot + 7}:00 - ${slot + 8}:00`} {/* Display 8:00-9:00 as Slot 1, etc. */}
+                </div>
+              ))}
           </div>
         </div>
       )}
