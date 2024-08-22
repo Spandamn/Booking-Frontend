@@ -27,6 +27,25 @@
     background-color: orange;
   }
   
+  .slot.available {
+    background-color: #4caf50; /* Green for available */
+    color: white;
+    cursor: pointer;
+  }
+  
+  .slot.booked {
+    background-color: #f44336; /* Red for booked */
+    color: white;
+    cursor: not-allowed;
+  }
+  
+  .slot.selected {
+    background-color: #ff9800; /* Orange for selected */
+    color: white;
+    cursor: pointer;
+  }
+  
+
   .email-input {
     margin-bottom: 20px;
   }

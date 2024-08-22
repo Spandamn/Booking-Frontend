@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './BookingPage.css'; // Ensure this path is correct and the file is being imported
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './BookingPage.css';
 import config from './config.json';
 
 interface Slot {
@@ -62,50 +63,54 @@ const BookingPage: React.FC = () => {
       .then((response) => response.json())
       .then(() => {
         alert('Booking successful!');
-        // Clear the selection
         setSelectedSlot(null);
         setEmail('');
       })
       .catch((error) => console.error('Error booking slot:', error));
   };
 
+  const currentDateString = new Date().toISOString().split('T')[0];
+
   return (
-    <div className="booking-page">
+    <div className="container mt-4">
       <h1>Book a Slot in {roomName}</h1>
-      <div className="date-picker">
+      <div className="form-group">
         <label>Select a Date:</label>
         <input
           type="date"
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
+          min={currentDateString} // Disallow past dates
+          className="form-control"
         />
-        <button onClick={handleFetchSlots}>Fetch Available Slots</button>
+        <button onClick={handleFetchSlots} className="btn btn-primary mt-2">Fetch Available Slots</button>
       </div>
       {selectedDate && (
-        <div className="slots-container">
+        <div className="slots-container mt-4">
           <h2>Available Slots on {selectedDate}</h2>
-          <div className="slots">
+          <div className="row">
             {availableSlots.map((slot) => (
               <div
                 key={slot}
-                className={`slot ${selectedSlot === slot ? 'selected' : ''}`}
+                className={`col-12 col-md-3 slot ${selectedSlot === slot ? 'selected' : ''} ${selectedSlot && selectedSlot !== slot ? 'disabled' : ''}`}
                 onClick={() => handleSlotClick(slot)}
               >
-                {`${slot + 7}:00 - ${slot + 8}:00`} {/* Display 8:00-9:00 as Slot 1, etc. */}
+                {`${slot + 7}:00 - ${slot + 8}:00`}
               </div>
             ))}
           </div>
         </div>
       )}
-      <div className="email-input">
+      <div className="form-group mt-4">
         <label>Enter your Email:</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="form-control"
         />
       </div>
-      <button onClick={handleBookingSubmit} className="submit-button">Book Slot</button>
+      <button onClick={handleBookingSubmit} className="btn btn-primary">Book Slot</button>
     </div>
   );
 };
