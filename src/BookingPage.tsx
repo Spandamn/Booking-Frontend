@@ -97,7 +97,7 @@ const BookingPage: React.FC = () => {
       {showSlots && selectedDate && (
         <div className="slots-container text-center">
           <h2>Available Slots on {selectedDate}</h2>
-          <div className="legend-container text-center mb-3">
+          <div className="legend-container mb-3 d-flex justify-content-center">
             <span className="legend-item"><div className="legend-box available"></div> Available</span>
             <span className="legend-item"><div className="legend-box booked"></div> Booked</span>
             <span className="legend-item"><div className="legend-box selected"></div> Selected</span>
