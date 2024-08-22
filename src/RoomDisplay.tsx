@@ -13,9 +13,20 @@ interface Slot {
 const RoomDisplay: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [slots, setSlots] = useState<Slot[]>([]);
-  const apiUrl = `${config.apiBaseUrl}/getSlots?roomName=${roomName}`;
 
+  // Get current hour and today's date
+  const currentHour = new Date().getHours();
+  const currentDate = new Date().toISOString().split('T')[0]; // Today's date in YYYY-MM-DD format
+
+  // Slots from 8:00 AM (slot 1) to 11:00 PM (slot 16)
+  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8).filter(
+    (slot) => slot > currentHour
+  );
+
+  // Fetch slots for the current date only
   useEffect(() => {
+    const apiUrl = `${config.apiBaseUrl}/getSlots?roomName=${roomName}&date=${currentDate}`;
+    
     fetch(apiUrl)
       .then((response) => {
         if (!response.ok) {
@@ -25,15 +36,7 @@ const RoomDisplay: React.FC = () => {
       })
       .then((data) => setSlots(data))
       .catch((error) => console.error('Error fetching slots:', error.message));
-  }, [roomName]);
-
-  const currentHour = new Date().getHours();
-  const currentDate = new Date().toISOString().split('T')[0]; // Today's date in YYYY-MM-DD format
-
-  // Slots from 8:00 AM (slot 1) to 11:00 PM (slot 16)
-  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8).filter(
-    (slot) => slot > currentHour || currentDate !== new Date().toISOString().split('T')[0]
-  );
+  }, [roomName, currentDate]);
 
   const isSlotBooked = (slot: number): boolean => {
     // Check if the slot is booked on the current date
