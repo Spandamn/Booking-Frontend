@@ -25,21 +25,27 @@ const RoomDisplay: React.FC = () => {
   // Fetch slots for the current date only
   useEffect(() => {
     const apiUrl = `${config.apiBaseUrl}/getSlots?roomName=${roomName}&date=${currentDate}`;
+    console.log(`Fetching slots from API: ${apiUrl}`);
     
     fetch(apiUrl)
       .then((response) => {
+        console.log('Received response from API:', response);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
       })
-      .then((data) => setSlots(data))
+      .then((data) => {
+        console.log('Received slot data:', data);
+        setSlots(data);
+      })
       .catch((error) => console.error('Error fetching slots:', error.message));
   }, [roomName, currentDate]);
 
   const isSlotBooked = (slot: number): boolean => {
-    // Check if the slot is booked
-    return slots.some(s => s.Slot === slot);
+    const booked = slots.some(s => s.Slot === slot);
+    console.log(`Slot ${slot} is ${booked ? 'booked' : 'available'}`);
+    return booked;
   };
 
   const bookingUrl = `${window.location.origin}/${roomName}/book`;
