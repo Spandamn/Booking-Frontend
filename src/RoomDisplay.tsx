@@ -56,6 +56,11 @@ const RoomDisplay: React.FC = () => {
   return (
     <div className="room-display-container">
       <h1>{roomName} Availability</h1>
+      <div className="qr-code">
+        <h2>Book a Slot</h2>
+        <QRCode value={bookingUrl} />
+        <p>Scan this QR code to book a slot.</p>
+      </div>
       <div className="legend">
         <div>
           <div className="legend-box available"></div> Available
@@ -65,7 +70,7 @@ const RoomDisplay: React.FC = () => {
         </div>
       </div>
       <div className="slots-container">
-        {allSlots.map((slot, index) => (
+        {allSlots.map((slot) => (
           <div
             key={slot}
             className={`slot ${isSlotBooked(slot) ? 'booked' : 'available'}`}
@@ -73,11 +78,6 @@ const RoomDisplay: React.FC = () => {
             {`${slot + 7}:00 - ${slot + 8}:00`}
           </div>
         ))}
-      </div>
-      <div className="qr-code">
-        <h2>Book a Slot</h2>
-        <QRCode value={bookingUrl} />
-        <p>Scan this QR code to book a slot.</p>
       </div>
     </div>
   );
