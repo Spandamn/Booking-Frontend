@@ -16,6 +16,35 @@
   margin-bottom: 20px;
 }
 
+.legend {
+  margin-bottom: 20px;
+}
+
+.legend-item {
+  margin-right: 15px;
+  font-size: 14px;
+}
+
+.legend-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.legend-box.available {
+  background-color: #4caf50; /* Green */
+}
+
+.legend-box.booked {
+  background-color: #f44336; /* Red */
+}
+
+.legend-box.selected {
+  background-color: #ff9800; /* Orange */
+}
+
 .slots {
   display: flex;
   flex-wrap: wrap;

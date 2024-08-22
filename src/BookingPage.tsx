@@ -94,11 +94,23 @@ const BookingPage: React.FC = () => {
           Fetch Available Slots
         </button>
       </div>
+
       {showSlots && selectedDate && (
         <div className="slots-container text-center">
           <h2>Available Slots on {selectedDate}</h2>
+          <div className="legend d-flex justify-content-center mb-3">
+            <div className="legend-item d-flex align-items-center mr-4">
+              <div className="legend-box available"></div> Available
+            </div>
+            <div className="legend-item d-flex align-items-center mr-4">
+              <div className="legend-box booked"></div> Booked
+            </div>
+            <div className="legend-item d-flex align-items-center">
+              <div className="legend-box selected"></div> Selected
+            </div>
+          </div>
           <div className="d-flex justify-content-center">
-            <div className="slots row">
+            <div className="slots d-flex flex-wrap justify-content-center">
               {Array.from({ length: 16 }, (_, i) => i + 1)
                 .filter(slot => selectedDate !== new Date().toISOString().split('T')[0] || slot + 7 >= currentHour)
                 .map((slot) => (
@@ -106,6 +118,7 @@ const BookingPage: React.FC = () => {
                     key={slot}
                     className={`slot btn ${bookedSlots.includes(slot) ? 'btn-danger' : selectedSlot === slot ? 'btn-warning' : 'btn-success'} m-2 col-5`}
                     onClick={() => !bookedSlots.includes(slot) && handleSlotClick(slot)}
+                    style={{ width: 'auto', padding: '10px 15px', minWidth: '120px' }}
                   >
                     {`${slot + 7}:00 - ${slot + 8}:00`}
                   </div>
@@ -114,6 +127,7 @@ const BookingPage: React.FC = () => {
           </div>
         </div>
       )}
+      
       {showSlots && (
         <div className="email-input text-center mt-4">
           <label htmlFor="email-input">Enter your Email:</label>
