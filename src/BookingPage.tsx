@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './BookingPage.css';
 import config from './config.json';
@@ -12,10 +12,11 @@ interface Slot {
 const BookingPage: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const [availableSlots, setAvailableSlots] = useState<number[]>(Array.from({ length: 16 }, (_, i) => i + 1)); // Default all slots as available
+  const [availableSlots, setAvailableSlots] = useState<number[]>([]);
   const [bookedSlots, setBookedSlots] = useState<number[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState<string>('');
+  const [showSlots, setShowSlots] = useState<boolean>(false); // New state to manage when to show slots
 
   const handleFetchSlots = () => {
     if (selectedDate) {
@@ -28,6 +29,7 @@ const BookingPage: React.FC = () => {
           const freeSlots = allSlots.filter(slot => !booked.includes(slot));
           setAvailableSlots(freeSlots);
           setBookedSlots(booked);
+          setShowSlots(true); // Show slots only after fetching
         })
         .catch((error) => console.error('Error fetching available slots:', error));
     }
@@ -80,11 +82,14 @@ const BookingPage: React.FC = () => {
         <input
           type="date"
           value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
+          onChange={(e) => {
+            setSelectedDate(e.target.value);
+            setShowSlots(false); // Reset showing slots when date changes
+          }}
         />
         <button onClick={handleFetchSlots}>Fetch Available Slots</button>
       </div>
-      {selectedDate && (
+      {showSlots && selectedDate && (
         <div className="slots-container">
           <h2>Available Slots on {selectedDate}</h2>
           <div className="slots">
