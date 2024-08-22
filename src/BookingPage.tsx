@@ -77,7 +77,7 @@ const BookingPage: React.FC = () => {
   return (
     <div className="booking-page container">
       <h1 className="text-center my-4">Book a Slot in {roomName}</h1>
-      <div className="date-picker form-group text-center mb-4">
+      <div className="date-picker text-center mb-4">
         <label htmlFor="date-input" className="mr-3">Select a Date:</label>
         <input
           id="date-input"
@@ -98,15 +98,14 @@ const BookingPage: React.FC = () => {
         <div className="slots-container text-center">
           <h2>Available Slots on {selectedDate}</h2>
           <div className="d-flex justify-content-center">
-            <div className="slots d-flex flex-wrap justify-content-center">
+            <div className="slots row">
               {Array.from({ length: 16 }, (_, i) => i + 1)
                 .filter(slot => selectedDate !== new Date().toISOString().split('T')[0] || slot + 7 >= currentHour)
                 .map((slot) => (
                   <div
                     key={slot}
-                    className={`slot btn ${bookedSlots.includes(slot) ? 'btn-danger' : selectedSlot === slot ? 'btn-warning' : 'btn-success'} ${bookedSlots.includes(slot) ? 'booked' : selectedSlot === slot ? 'selected' : 'available'} m-2`}
+                    className={`slot btn ${bookedSlots.includes(slot) ? 'btn-danger' : selectedSlot === slot ? 'btn-warning' : 'btn-success'} m-2 col-5`}
                     onClick={() => !bookedSlots.includes(slot) && handleSlotClick(slot)}
-                    style={{ width: 'auto', padding: '10px 15px', minWidth: '120px' }}
                   >
                     {`${slot + 7}:00 - ${slot + 8}:00`}
                   </div>
@@ -116,11 +115,11 @@ const BookingPage: React.FC = () => {
         </div>
       )}
       {showSlots && (
-        <div className="email-input form-group text-center mt-4">
+        <div className="email-input text-center mt-4">
           <label htmlFor="email-input">Enter your Email:</label>
           <input
             id="email-input"
-            className="form-control mx-auto"
+            className="form-control mx-auto mt-2"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
