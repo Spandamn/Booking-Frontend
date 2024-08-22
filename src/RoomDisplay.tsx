@@ -17,9 +17,12 @@ const RoomDisplay: React.FC = () => {
   const currentHour = new Date().getHours();
   const currentDate = new Date().toISOString().split('T')[0]; // Today's date in YYYY-MM-DD format
 
-  // Slots from 8:00 AM (slot 1) to 11:00 PM (slot 16)
-  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8).filter(
-    (slot) => slot > currentHour
+  // Calculate available slots based on the current time
+  const allSlots = Array.from({ length: 16 }, (_, i) => i + 1).filter(
+    (slot) => {
+      const slotStartHour = slot + 7; // Since Slot 1 corresponds to 8:00 AM
+      return slotStartHour > currentHour;
+    }
   );
 
   // Fetch slots for the current date only
@@ -68,7 +71,7 @@ const RoomDisplay: React.FC = () => {
               <td
                 className={isSlotBooked(slot) ? 'booked' : 'available'}
               >
-                {`${slot}:00 - ${slot + 1}:00`}
+                {`${slot + 7}:00 - ${slot + 8}:00`}
               </td>
             </tr>
           ))}
