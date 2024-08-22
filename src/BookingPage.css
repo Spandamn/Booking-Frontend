@@ -1,33 +1,64 @@
-/* Custom styles for your booking page */
-.form-group label {
-  font-weight: bold;
-}
+.booking-page {
+    margin: 20px;
+  }
+  
+  .date-picker {
+    margin-bottom: 20px;
+  }
+  
+  .slots-container {
+    margin-bottom: 20px;
+  }
+  
+  .slots {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .slot {
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background-color: #f0f0f0;
+  }
+  
+  .slot.selected {
+    background-color: orange;
+  }
+  
+  .slot.available {
+    background-color: #4caf50; /* Green for available */
+    color: white;
+    cursor: pointer;
+  }
+  
+  .slot.booked {
+    background-color: #f44336; /* Red for booked */
+    color: white;
+    cursor: not-allowed;
+  }
+  
+  .slot.selected {
+    background-color: #ff9800; /* Orange for selected */
+    color: white;
+    cursor: pointer;
+  }
+  
 
-.slot {
-  cursor: pointer;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  transition: background-color 0.3s ease;
-}
-
-.slot.selected {
-  background-color: orange;
-}
-
-.slot.disabled {
-  pointer-events: none;
-  opacity: 0.6;
-}
-
-/* If you want to customize the appearance further */
-.btn-primary {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-  border-color: #004085;
-}
+  .email-input {
+    margin-bottom: 20px;
+  }
+  
+  .submit-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  

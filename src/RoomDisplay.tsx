@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import QRCode from 'qrcode.react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './RoomDisplay.css';
 
 interface Slot {
@@ -27,41 +26,44 @@ const RoomDisplay: React.FC = () => {
       .catch((error) => console.error('Error fetching slots:', error.message));
   }, [roomName]);
 
-  const currentHour = new Date().getHours();
-  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8).filter(slot => slot >= currentHour); // 8:00 - 23:00 (16 hours)
+  // Get the current time in BST
+  const now = new Date();
+  const bstOffset = now.getTimezoneOffset() - 60; // BST is UTC+1
+  const currentHourBST = new Date(now.getTime() - bstOffset * 60 * 1000).getHours();
 
-  const bookingUrl = `${window.location.origin}/${roomName}/book`; // Get the current URL base
+  // Only show slots from the current hour and onwards
+  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8).filter(slot => slot >= currentHourBST);
+
+  const bookingUrl = `${window.location.origin}/${roomName}/book`;
 
   return (
-    <div className="container mt-4">
-      <div className="room-display-container">
-        <h1>{roomName} Availability</h1>
-        <div className="legend d-flex justify-content-start mb-3">
-          <div className="d-flex align-items-center">
-            <span className="legend-box available"></span> Available
-          </div>
-          <div className="d-flex align-items-center ml-4">
-            <span className="legend-box booked"></span> Booked
-          </div>
+    <div className="room-display-container">
+      <h1>{roomName} Availability</h1>
+      <div className="legend">
+        <div>
+          <div className="legend-box available"></div> Available
         </div>
-        <table className="table table-bordered">
-          <tbody>
-            {allSlots.map((slot) => (
-              <tr key={slot}>
-                <td
-                  className={slots.some(s => s.Slot === slot) ? 'booked' : 'available'}
-                >
-                  {`${slot}:00 - ${slot + 1}:00`}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="qr-code text-center mt-4">
-          <h2>Book a Slot</h2>
-          <QRCode value={bookingUrl} />
-          <p>Scan this QR code to book a slot.</p>
+        <div>
+          <div className="legend-box booked"></div> Booked
         </div>
+      </div>
+      <table className="slots-table">
+        <tbody>
+          {allSlots.map((slot) => (
+            <tr key={slot}>
+              <td
+                className={slots.some(s => s.Slot === slot) ? 'booked' : 'available'}
+              >
+                {`${slot}:00 - ${slot + 1}:00`}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="qr-code">
+        <h2>Book a Slot</h2>
+        <QRCode value={bookingUrl} />
+        <p>Scan this QR code to book a slot.</p>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './BookingPage.css';
 import config from './config.json';
 
@@ -13,9 +12,23 @@ interface Slot {
 const BookingPage: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const [availableSlots, setAvailableSlots] = useState<number[]>(Array.from({ length: 16 }, (_, i) => i + 1)); // Default all slots as available
+  const [availableSlots, setAvailableSlots] = useState<number[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState<string>('');
+  const [todaySlots, setTodaySlots] = useState<number[]>([]); // Slots available today after the current time
+
+  useEffect(() => {
+    if (selectedDate) {
+      const today = new Date().toISOString().split('T')[0];
+      if (selectedDate === today) {
+        const currentHour = new Date().getHours();
+        const remainingSlots = Array.from({ length: 16 - (currentHour - 8) }, (_, i) => i + (currentHour - 7));
+        setTodaySlots(remainingSlots);
+      } else {
+        setTodaySlots([]);
+      }
+    }
+  }, [selectedDate]);
 
   const handleFetchSlots = () => {
     if (selectedDate) {
@@ -24,7 +37,6 @@ const BookingPage: React.FC = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data.length === 0) {
-            // If no slots are returned, assume all are available
             setAvailableSlots(Array.from({ length: 16 }, (_, i) => i + 1));
           } else {
             const bookedSlots = data.map((slot: Slot) => slot.Slot);
@@ -38,7 +50,9 @@ const BookingPage: React.FC = () => {
   };
 
   const handleSlotClick = (slot: number) => {
-    setSelectedSlot(slot);
+    if (availableSlots.includes(slot)) {
+      setSelectedSlot(slot);
+    }
   };
 
   const handleBookingSubmit = () => {
@@ -69,48 +83,53 @@ const BookingPage: React.FC = () => {
       .catch((error) => console.error('Error booking slot:', error));
   };
 
-  const currentDateString = new Date().toISOString().split('T')[0];
+  const isSlotAvailable = (slot: number) => {
+    return todaySlots.length === 0 || todaySlots.includes(slot);
+  };
 
   return (
-    <div className="container mt-4">
+    <div className="booking-page">
       <h1>Book a Slot in {roomName}</h1>
-      <div className="form-group">
+      <div className="date-picker">
         <label>Select a Date:</label>
         <input
           type="date"
           value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-          min={currentDateString} // Disallow past dates
-          className="form-control"
+          min={new Date().toISOString().split('T')[0]} // Prevent past dates
+          onChange={(e) => {
+            setSelectedDate(e.target.value);
+            setAvailableSlots([]); // Reset available slots when date changes
+          }}
         />
-        <button onClick={handleFetchSlots} className="btn btn-primary mt-2">Fetch Available Slots</button>
+        <button onClick={handleFetchSlots}>Fetch Available Slots</button>
       </div>
       {selectedDate && (
-        <div className="slots-container mt-4">
+        <div className="slots-container">
           <h2>Available Slots on {selectedDate}</h2>
-          <div className="row">
-            {availableSlots.map((slot) => (
+          <div className="slots">
+            {Array.from({ length: 16 }, (_, i) => i + 1).map((slot) => (
               <div
                 key={slot}
-                className={`col-12 col-md-3 slot ${selectedSlot === slot ? 'selected' : ''} ${selectedSlot && selectedSlot !== slot ? 'disabled' : ''}`}
+                className={`slot ${
+                  !isSlotAvailable(slot) ? 'booked' : selectedSlot === slot ? 'selected' : availableSlots.includes(slot) ? 'available' : 'booked'
+                }`}
                 onClick={() => handleSlotClick(slot)}
               >
-                {`${slot + 7}:00 - ${slot + 8}:00`}
+                {`${slot + 7}:00 - ${slot + 8}:00`} {/* Display 8:00-9:00 as Slot 1, etc. */}
               </div>
             ))}
           </div>
         </div>
       )}
-      <div className="form-group mt-4">
+      <div className="email-input">
         <label>Enter your Email:</label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="form-control"
         />
       </div>
-      <button onClick={handleBookingSubmit} className="btn btn-primary">Book Slot</button>
+      <button onClick={handleBookingSubmit} className="submit-button">Book Slot</button>
     </div>
   );
 };
