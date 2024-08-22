@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import QRCode from 'qrcode.react';
 import './RoomDisplay.css';
+import config from './config.json';
 
 interface Slot {
   Slot: number;
@@ -12,7 +13,7 @@ interface Slot {
 const RoomDisplay: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [slots, setSlots] = useState<Slot[]>([]);
-  const apiUrl = `${window.location.origin}/getSlots?roomName=${roomName}`;
+  const apiUrl = `${config.apiBaseUrl}/getSlots?roomName=${roomName}`;
 
   useEffect(() => {
     fetch(apiUrl)
