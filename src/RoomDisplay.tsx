@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import QRCode from 'qrcode.react';
-import './RoomDisplay.css'; // Ensure this path is correct and the file is being imported
+import './RoomDisplay.css';
 
 interface Slot {
   Slot: number;
@@ -26,9 +26,15 @@ const RoomDisplay: React.FC = () => {
       .catch((error) => console.error('Error fetching slots:', error.message));
   }, [roomName]);
 
-  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8); // 8:00 - 23:00 (16 hours)
+  // Get the current time in BST
+  const now = new Date();
+  const bstOffset = now.getTimezoneOffset() - 60; // BST is UTC+1
+  const currentHourBST = new Date(now.getTime() - bstOffset * 60 * 1000).getHours();
 
-  const bookingUrl = `${window.location.origin}/${roomName}/book`; // Get the current URL base
+  // Only show slots from the current hour and onwards
+  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8).filter(slot => slot >= currentHourBST);
+
+  const bookingUrl = `${window.location.origin}/${roomName}/book`;
 
   return (
     <div className="room-display-container">
