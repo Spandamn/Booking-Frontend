@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './BookingPage.css'; 
+import './BookingPage.css';
 import config from './config.json';
 
 interface Slot {
@@ -12,28 +12,22 @@ interface Slot {
 const BookingPage: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const [availableSlots, setAvailableSlots] = useState<number[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<number[]>(Array.from({ length: 16 }, (_, i) => i + 1)); // Default all slots as available
   const [bookedSlots, setBookedSlots] = useState<number[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState<string>('');
 
   const handleFetchSlots = () => {
     if (selectedDate) {
-      const apiUrl = `${config.apiBaseUrl}/getAvailableSlots?roomName=${roomName}&date=${selectedDate}`;
+      const apiUrl = `${config.apiBaseUrl}/getSlots?roomName=${roomName}&date=${selectedDate}`;
       fetch(apiUrl)
         .then((response) => response.json())
         .then((data) => {
-          if (data.length === 0) {
-            // If no slots are returned, assume all are available
-            setAvailableSlots(Array.from({ length: 16 }, (_, i) => i + 1));
-            setBookedSlots([]);
-          } else {
-            const booked = data.map((slot: Slot) => slot.Slot);
-            const allSlots = Array.from({ length: 16 }, (_, i) => i + 1);
-            const freeSlots = allSlots.filter(slot => !booked.includes(slot));
-            setAvailableSlots(freeSlots);
-            setBookedSlots(booked);
-          }
+          const booked = data.map((slot: Slot) => slot.Slot);
+          const allSlots = Array.from({ length: 16 }, (_, i) => i + 1);
+          const freeSlots = allSlots.filter(slot => !booked.includes(slot));
+          setAvailableSlots(freeSlots);
+          setBookedSlots(booked);
         })
         .catch((error) => console.error('Error fetching available slots:', error));
     }

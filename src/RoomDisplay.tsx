@@ -12,7 +12,7 @@ interface Slot {
 const RoomDisplay: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [slots, setSlots] = useState<Slot[]>([]);
-  const apiUrl = `your-api-url-here/getSlots?roomName=${roomName}`;
+  const apiUrl = `${window.location.origin}/getSlots?roomName=${roomName}`;
 
   useEffect(() => {
     fetch(apiUrl)
@@ -26,13 +26,12 @@ const RoomDisplay: React.FC = () => {
       .catch((error) => console.error('Error fetching slots:', error.message));
   }, [roomName]);
 
-  // Get the current time in BST
-  const now = new Date();
-  const bstOffset = now.getTimezoneOffset() - 60; // BST is UTC+1
-  const currentHourBST = new Date(now.getTime() - bstOffset * 60 * 1000).getHours();
+  const currentHour = new Date().getHours();
+  const currentDate = new Date().toISOString().split('T')[0]; // Today's date in YYYY-MM-DD format
 
-  // Only show slots from the current hour and onwards
-  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8).filter(slot => slot >= currentHourBST);
+  const allSlots = Array.from({ length: 16 }, (_, i) => i + 8).filter(
+    (slot) => slot >= currentHour || currentDate !== new Date().toISOString().split('T')[0]
+  ); // 8:00 - 23:00 and filter for current time if today
 
   const bookingUrl = `${window.location.origin}/${roomName}/book`;
 
