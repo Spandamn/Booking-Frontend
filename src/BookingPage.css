@@ -1,64 +1,64 @@
 .booking-page {
-    margin: 20px;
-  }
-  
-  .date-picker {
-    margin-bottom: 20px;
-  }
-  
-  .slots-container {
-    margin-bottom: 20px;
-  }
-  
-  .slots {
-    display: flex;
-    flex-wrap: wrap;
-  }
-  
-  .slot {
-    margin: 5px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    background-color: #f0f0f0;
-  }
-  
-  .slot.selected {
-    background-color: orange;
-  }
-  
-  .slot.available {
-    background-color: #4caf50; /* Green for available */
-    color: white;
-    cursor: pointer;
-  }
-  
-  .slot.booked {
-    background-color: #f44336; /* Red for booked */
-    color: white;
-    cursor: not-allowed;
-  }
-  
-  .slot.selected {
-    background-color: #ff9800; /* Orange for selected */
-    color: white;
-    cursor: pointer;
-  }
-  
+  margin: 20px;
+}
 
-  .email-input {
-    margin-bottom: 20px;
-  }
-  
-  .submit-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .submit-button:hover {
-    background-color: #0056b3;
-  }
-  
+.date-picker {
+  margin-bottom: 20px;
+}
+
+.slots-container {
+  margin-bottom: 20px;
+}
+
+.slots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the slots */
+}
+
+.slot {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: #f0f0f0; /* Fallback color if no class applied */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.slot.booked {
+  background-color: #f44336 !important; /* Red for booked */
+  color: white !important;
+  cursor: not-allowed;
+}
+
+.slot.available {
+  background-color: #4caf50 !important; /* Green for available */
+  color: white !important;
+  cursor: pointer;
+}
+
+.slot.selected {
+  background-color: #ff9800 !important; /* Orange for selected */
+  color: white !important;
+  cursor: pointer;
+}
+
+.slot:hover {
+  filter: brightness(1.1); /* Slight brightening effect on hover */
+}
+
+.email-input {
+  margin-bottom: 20px;
+}
+
+.submit-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}

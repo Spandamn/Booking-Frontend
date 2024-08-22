@@ -104,7 +104,7 @@ const BookingPage: React.FC = () => {
                 .map((slot) => (
                   <div
                     key={slot}
-                    className={`slot btn ${bookedSlots.includes(slot) ? 'btn-danger' : selectedSlot === slot ? 'btn-warning' : 'btn-success'} m-2`}
+                    className={`slot btn ${bookedSlots.includes(slot) ? 'btn-danger' : selectedSlot === slot ? 'btn-warning' : 'btn-success'} ${bookedSlots.includes(slot) ? 'booked' : selectedSlot === slot ? 'selected' : 'available'} m-2`}
                     onClick={() => !bookedSlots.includes(slot) && handleSlotClick(slot)}
                     style={{ width: 'auto', padding: '10px 15px', minWidth: '120px' }}
                   >
