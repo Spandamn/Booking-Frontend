@@ -29,9 +29,15 @@ const RoomDisplay: React.FC = () => {
   const currentHour = new Date().getHours();
   const currentDate = new Date().toISOString().split('T')[0]; // Today's date in YYYY-MM-DD format
 
+  // Slots from 8:00 AM (slot 1) to 11:00 PM (slot 16)
   const allSlots = Array.from({ length: 16 }, (_, i) => i + 8).filter(
-    (slot) => slot >= currentHour || currentDate !== new Date().toISOString().split('T')[0]
-  ); // 8:00 - 23:00 and filter for current time if today
+    (slot) => slot > currentHour || currentDate !== new Date().toISOString().split('T')[0]
+  );
+
+  const isSlotBooked = (slot: number): boolean => {
+    // Check if the slot is booked on the current date
+    return slots.some(s => s.Slot === slot && s.Date === currentDate);
+  };
 
   const bookingUrl = `${window.location.origin}/${roomName}/book`;
 
@@ -51,7 +57,7 @@ const RoomDisplay: React.FC = () => {
           {allSlots.map((slot) => (
             <tr key={slot}>
               <td
-                className={slots.some(s => s.Slot === slot) ? 'booked' : 'available'}
+                className={isSlotBooked(slot) ? 'booked' : 'available'}
               >
                 {`${slot}:00 - ${slot + 1}:00`}
               </td>
