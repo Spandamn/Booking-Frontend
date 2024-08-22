@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import config from './config.json'; // Assuming your API URLs are in this config file
-import './BookingPage.css';
+import './BookingPage.css'; // Ensure this path is correct and the file is being imported
+import config from './config.json';
 
 interface Slot {
   Slot: number;
@@ -12,7 +12,7 @@ interface Slot {
 const BookingPage: React.FC = () => {
   const { roomName } = useParams<{ roomName: string }>();
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const [availableSlots, setAvailableSlots] = useState<number[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<Slot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const [email, setEmail] = useState<string>('');
 
@@ -31,7 +31,7 @@ const BookingPage: React.FC = () => {
   };
 
   const handleBookingSubmit = () => {
-    if (selectedSlot === null || !email) {
+    if (!selectedSlot || !email) {
       alert('Please select a slot and enter your email.');
       return;
     }
@@ -42,8 +42,7 @@ const BookingPage: React.FC = () => {
       Date: selectedDate,
     };
 
-    const apiUrl = `${config.apiBaseUrl}/bookSlot?roomName=${roomName}`;
-    fetch(apiUrl, {
+    fetch(`${config.apiBaseUrl}/bookSlot?roomName=${roomName}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,8 +55,6 @@ const BookingPage: React.FC = () => {
       })
       .catch((error) => console.error('Error booking slot:', error));
   };
-
-  const allSlots = Array.from({ length: 24 }, (_, i) => i + 8); // Assuming slots from 8:00 to 23:00
 
   return (
     <div className="booking-page">
@@ -75,13 +72,13 @@ const BookingPage: React.FC = () => {
         <div className="slots-container">
           <h2>Available Slots on {selectedDate}</h2>
           <div className="slots">
-            {allSlots.map((slot) => (
+            {availableSlots.map((slot) => (
               <div
-                key={slot}
-                className={`slot ${availableSlots.includes(slot) ? 'available' : 'booked'} ${selectedSlot === slot ? 'selected' : ''}`}
-                onClick={() => handleSlotClick(slot)}
+                key={slot.Slot}
+                className={`slot ${selectedSlot === slot.Slot ? 'selected' : ''}`}
+                onClick={() => handleSlotClick(slot.Slot)}
               >
-                {`${slot}:00 - ${slot + 1}:00`}
+                {`${slot.Slot}:00 - ${slot.Slot + 1}:00`}
               </div>
             ))}
           </div>
