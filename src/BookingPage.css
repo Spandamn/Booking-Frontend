@@ -19,6 +19,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 10px; /* Add spacing between the slots */
 }
 
 .slot {
@@ -27,6 +28,8 @@
   border: 1px solid #ccc;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  text-align: center;
+  width: 150px; /* Ensure consistent width for better alignment */
 }
 
 .slot.available {
