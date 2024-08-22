@@ -64,19 +64,16 @@ const RoomDisplay: React.FC = () => {
           <div className="legend-box booked"></div> Booked
         </div>
       </div>
-      <table className="slots-table">
-        <tbody>
-          {allSlots.map((slot) => (
-            <tr key={slot}>
-              <td
-                className={isSlotBooked(slot) ? 'booked' : 'available'}
-              >
-                {`${slot + 7}:00 - ${slot + 8}:00`}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="slots-container">
+        {allSlots.map((slot, index) => (
+          <div
+            key={slot}
+            className={`slot ${isSlotBooked(slot) ? 'booked' : 'available'}`}
+          >
+            {`${slot + 7}:00 - ${slot + 8}:00`}
+          </div>
+        ))}
+      </div>
       <div className="qr-code">
         <h2>Book a Slot</h2>
         <QRCode value={bookingUrl} />
