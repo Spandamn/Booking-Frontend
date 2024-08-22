@@ -7,7 +7,6 @@ import config from './config.json';
 interface Slot {
   Slot: number;
   Email: string;
-  Date: string;
 }
 
 const RoomDisplay: React.FC = () => {
@@ -39,8 +38,8 @@ const RoomDisplay: React.FC = () => {
   }, [roomName, currentDate]);
 
   const isSlotBooked = (slot: number): boolean => {
-    // Check if the slot is booked on the current date
-    return slots.some(s => s.Slot === slot && s.Date === currentDate);
+    // Check if the slot is booked
+    return slots.some(s => s.Slot === slot);
   };
 
   const bookingUrl = `${window.location.origin}/${roomName}/book`;
