@@ -59,7 +59,7 @@ const RoomDisplay: React.FC = () => {
       <h1>{roomName} Availability</h1>
       <div className="qr-code">
         <h2>Book a Slot</h2>
-        <QRCode value={bookingUrl} />
+        <QRCode value={bookingUrl} size={200}/>
         <p>Scan this QR code to book a slot.</p>
       </div>
       <div className="legend">
