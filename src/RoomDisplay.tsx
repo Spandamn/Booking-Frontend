@@ -21,7 +21,7 @@ const RoomDisplay: React.FC = () => {
   const allSlots = Array.from({ length: 16 }, (_, i) => i + 1).filter(
     (slot) => {
       const slotStartHour = slot + 7; // Since Slot 1 corresponds to 8:00 AM
-      return slotStartHour > currentHour;
+      return slotStartHour >= currentHour;
     }
   );
 
