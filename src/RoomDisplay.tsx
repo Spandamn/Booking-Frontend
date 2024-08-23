@@ -27,6 +27,7 @@ const RoomDisplay: React.FC = () => {
 
   // Fetch slots for the current date only
   useEffect(() => {
+    document.title = `${roomName} Bookings`;
     const apiUrl = `${config.apiBaseUrl}/getSlots?roomName=${roomName}&date=${currentDate}`;
     console.log(`Fetching slots from API: ${apiUrl}`);
     
