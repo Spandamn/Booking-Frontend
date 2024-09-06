@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RoomDisplay from './RoomDisplay';
 import BookingPage from './BookingPage';
+import CancelBooking from './CancelBooking';
 
 const App: React.FC = () => {
   return (
@@ -9,6 +10,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/:roomName" element={<RoomDisplay />} />
         <Route path="/:roomName/book" element={<BookingPage />} />
+        <Route path="/cancel/:token" element={<CancelBooking />} />
       </Routes>
     </Router>
   );
