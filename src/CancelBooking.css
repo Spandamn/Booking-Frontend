@@ -1,6 +1,7 @@
+/* CancelBooking.css */
 .cancel-booking-container {
-    margin: 20px auto;
     max-width: 600px;
+    margin: 50px auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
@@ -9,34 +10,13 @@
   }
   
   .cancel-booking-container h1 {
-    color: #333;
+    font-size: 2em;
     margin-bottom: 20px;
+    color: #333;
   }
   
-  .status-message {
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #f44336; /* Red for error messages */
-    color: white;
-  }
-  
-  .cancel-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .cancel-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .cancel-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+  .cancel-booking-container p {
+    font-size: 1.2em;
+    color: #555;
   }
   
