@@ -8,9 +8,9 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/cancelBooking/:token" element={<CancelBooking />} />
         <Route path="/:roomName" element={<RoomDisplay />} />
         <Route path="/:roomName/book" element={<BookingPage />} />
-        <Route path="/cancelBooking/:token" element={<CancelBooking />} />
       </Routes>
     </Router>
   );
