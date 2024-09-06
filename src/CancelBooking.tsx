@@ -2,13 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './CancelBooking.css'; // Importing the CSS file for styling
 import config from './config.json'; // Config file with API URL
 
-interface Booking {
-  BookingID: number;
-  Email: string;
-  Date: string;
-  Slot: number;
-}
-
 const CancelBooking: React.FC = () => {
   const [bookingToken, setBookingToken] = useState<string | null>(null);
   const [status, setStatus] = useState<string>('');
